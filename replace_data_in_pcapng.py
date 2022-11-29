@@ -57,6 +57,18 @@ def replace_dns(a,name_tag):
                     for ab in range(dns_num):
                         a['DNSRR'][ab].rrname=a['DNSQR'].qname
                         a['DNSRR'][ab].rdata='7.7.7.7'
+                nscount=a['DNS'].nscount
+                if nscount:
+                    for ab in range(nscount):
+                        a['DNS'].ns[ab].rrname=b'server.com.'
+    if a.haslayer('Raw'):
+        for aa in name_tag:
+            #if aa.encode('ascii') in a['Raw'].load:
+            if aa[0].encode('ascii') in a['Raw'].load:
+                #a['Raw'].load.replace(aa.encode('ascii'),name_
+                a['Raw'].load=a['Raw'].load.replace(aa[0].encode('ascii'),aa[1].encode('ascii'))
+
+
     return a
                 
 #def replace_mac_packet(a,mac_tag):
@@ -122,7 +134,8 @@ def generate_tag_list(ip_list,domain_name):
         #i=os.urandom(16)
         #i=[aa %128 for aa in i]
         #i=[chr(random.randint(48,110)) for aa in range(16)]
-        i=[chr(random.randint(48,110)) for aa in range(16)]
+        #i=[chr(random.randint(48,110)) for aa in range(16)]
+        i=[chr(random.randint(97,122)) for aa in range(16)]
         #name=bytes(i).decode('a
         name=''.join(i)+'.nobody'
         domain_tag.append((a,name))
