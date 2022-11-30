@@ -45,10 +45,12 @@ def replace_ip_and_mac(a, tag):
     return a
 
 def replace_dns(a,name_tag):
+    n=0
     if a.haslayer('DNSQR'):
         name=a['DNSQR'].qname.decode('ascii')[:-1]
         for aa in name_tag:
             if aa[0]==name:
+                n+=1
                 a['DNSQR'].qname=aa[1].encode('ascii')+b'.'
                 #a['DNSQR'].qname=aa[1].encode('ascii')+b'\0'
                 if a.haslayer('DNSRR'):
@@ -67,12 +69,17 @@ def replace_dns(a,name_tag):
             if aa[0].encode('ascii') in a['Raw'].load:
                 #a['Raw'].load.replace(aa.encode('ascii'),name_
                 a['Raw'].load=a['Raw'].load.replace(aa[0].encode('ascii'),aa[1].encode('ascii'))
-    #if a.haslayer('IP'):
-    if a.haslayer('UDP'):
+                n+=1
+    #n=0
+    if a.haslayer('IP'):
         del a['IP'].len
         del a['IP'].chksum
+        n+=1
+    if a.haslayer('UDP'):
         del a['UDP'].len    
         del a['UDP'].chksum
+        n+=1
+    if n:
         a=Ether(a.build())
     return a
                 
