@@ -71,15 +71,16 @@ def replace_dns(a,name_tag):
                 a['Raw'].load=a['Raw'].load.replace(aa[0].encode('ascii'),aa[1].encode('ascii'))
                 n+=1
     #n=0
-    if a.haslayer('IP'):
-        del a['IP'].len
-        del a['IP'].chksum
-        n+=1
-    if a.haslayer('UDP'):
-        del a['UDP'].len    
-        del a['UDP'].chksum
-        n+=1
     if n:
+    #if n and a.haslayer('IP'):
+        if a.haslayer('IP'):
+            del a['IP'].len
+            del a['IP'].chksum
+        #if n and a.haslayer('UDP'):
+        if a.haslayer('UDP'):
+            del a['UDP'].len    
+            del a['UDP'].chksum
+    #if n:
         a=Ether(a.build())
     return a
                 
