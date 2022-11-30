@@ -67,8 +67,13 @@ def replace_dns(a,name_tag):
             if aa[0].encode('ascii') in a['Raw'].load:
                 #a['Raw'].load.replace(aa.encode('ascii'),name_
                 a['Raw'].load=a['Raw'].load.replace(aa[0].encode('ascii'),aa[1].encode('ascii'))
-
-
+    #if a.haslayer('IP'):
+    if a.haslayer('UDP'):
+        del a['IP'].len
+        del a['IP'].chksum
+        del a['UDP'].len    
+        del a['UDP'].chksum
+        a=Ether(a.build())
     return a
                 
 #def replace_mac_packet(a,mac_tag):
